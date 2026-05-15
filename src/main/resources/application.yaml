@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: monitoring-app
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/atm_db}
+    username: ${SPRING_DATASOURCE_USERNAME:atm_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:atm_pass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  sql:
+    init:
+      mode: always 
+
+server:
+  port: 9000
