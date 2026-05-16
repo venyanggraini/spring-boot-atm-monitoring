@@ -2,6 +2,8 @@ package id.vanggraini.atm.monitoring_app.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import id.vanggraini.atm.monitoring_app.enums.ATMStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -16,7 +18,9 @@ import lombok.Data;
 @Table(name = "atm")
 @Data
 public class ATM {
+
     @Id
+    @Column(unique = true)
     private String atmId;
 
     @Enumerated(EnumType.STRING)
@@ -24,6 +28,7 @@ public class ATM {
     private ATMStatus atmStatus;
 
     @Column(name = "last_updated")
+    @UpdateTimestamp
     private LocalDateTime lastUpdated;
 
     @Embedded

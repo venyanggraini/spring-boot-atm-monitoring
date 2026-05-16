@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import id.vanggraini.atm.monitoring_app.dto.ATMFilterRequest;
-import id.vanggraini.atm.monitoring_app.dto.ATMFilterResponse;
+import id.vanggraini.atm.monitoring_app.dto.atm.ATMFilterRequest;
+import id.vanggraini.atm.monitoring_app.dto.atm.ATMFilterResponse;
 import id.vanggraini.atm.monitoring_app.service.ATMService;
 import lombok.AllArgsConstructor;
 
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/atm")
 @AllArgsConstructor
 public class ATMController {
 

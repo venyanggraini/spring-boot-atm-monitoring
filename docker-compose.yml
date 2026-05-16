@@ -16,36 +16,6 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    
-    networks:
-      atm-network:
-        ipv4_address: 172.20.0.2
-
-  monitoring-app:
-    build: .
-    container_name: atm-monitoring-app
-    restart: always
-
-    depends_on:
-      - postgres
-    
-    ports:
-      - "9000:9000"
-    
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atm_db
-      SPRING_DATASOURCE_USERNAME: atm_user
-      SPRING_DATASOURCE_PASSWORD: atm_pass
-    
-    networks:
-      - atm-network
 
 volumes:
   postgres_data:
-
-networks:
-  atm-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16

@@ -133,22 +133,45 @@ spring.datasource.password=postgres
 
 ## 📡 API Endpoints
 
-### Endpoint
+### Authentication Endpoint
 
 ```http
-POST /api/devices
+GET /api/v1/auth/init
+POST /api/v1/auth/login
+POST /api/v1/auth/logout
 ```
 
 ---
 
-### Request Body (Optional)
+#### Request Body
+
+```http
+POST /api/v1/auth/login
+```
 
 ```json
 {
-  "atmStatuses": ["ONLINE"],
-  "cashRemainingStatuses": ["LOW"],
-  "cardReaderStatuses": ["ERROR", "WARNING"],
-  "receiptPrinterStatuses": ["NORMAL"]
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+### ATM Monitoring Endpoint
+
+```http
+POST /api/v1/atm/devices
+```
+
+---
+
+#### Request Body (Optional)
+
+```json
+{
+  "atmStatuses": "ONLINE",
+  "cashRemainingStatuses": "LOW",
+  "cardReaderStatuses": "ERROR",
+  "receiptPrinterStatuses": "NORMAL"
 }
 ```
 
@@ -161,7 +184,7 @@ If request body is empty or null, the API returns all ATM data.
 ### Example curl
 
 ```bash
-curl -X POST http://localhost:8081/api/devices \
+curl -X POST http://localhost:8081/api/v1/atm/devices \
 -H "Content-Type: application/json" \
 -d '{
   "atmStatuses": ["ONLINE"],
@@ -250,7 +273,7 @@ By building this project, you will learn:
 
 ## 🔮 Future Improvements
 
-* JWT Authentication
+* JWT Authentication ✅
 * Kafka Event Streaming
 * ATM Heartbeat Monitoring
 * Redis Cache

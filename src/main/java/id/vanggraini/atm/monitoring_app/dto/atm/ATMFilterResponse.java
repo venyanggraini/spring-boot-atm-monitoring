@@ -1,4 +1,4 @@
-package id.vanggraini.atm.monitoring_app.dto;
+package id.vanggraini.atm.monitoring_app.dto.atm;
 
 import java.time.LocalDateTime;
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import id.vanggraini.atm.monitoring_app.dto.ATMFilterRequest;
+import id.vanggraini.atm.monitoring_app.dto.atm.ATMFilterRequest;
 import id.vanggraini.atm.monitoring_app.entity.ATM;
 import jakarta.persistence.criteria.Predicate;
 

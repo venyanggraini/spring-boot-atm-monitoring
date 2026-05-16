@@ -3,8 +3,8 @@ package id.vanggraini.atm.monitoring_app.service.impl;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-import id.vanggraini.atm.monitoring_app.dto.ATMFilterRequest;
-import id.vanggraini.atm.monitoring_app.dto.ATMFilterResponse;
+import id.vanggraini.atm.monitoring_app.dto.atm.ATMFilterRequest;
+import id.vanggraini.atm.monitoring_app.dto.atm.ATMFilterResponse;
 import id.vanggraini.atm.monitoring_app.entity.ATM;
 import id.vanggraini.atm.monitoring_app.exception.ATMStatusNotFoundException;
 import id.vanggraini.atm.monitoring_app.repository.ATMRepository;
