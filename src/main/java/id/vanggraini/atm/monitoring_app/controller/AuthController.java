@@ -11,6 +11,7 @@ import id.vanggraini.atm.monitoring_app.dto.auth.AuthRequest;
 import id.vanggraini.atm.monitoring_app.dto.auth.AuthResponse;
 import id.vanggraini.atm.monitoring_app.service.AuthService;
 import id.vanggraini.atm.monitoring_app.service.RsaKeyService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 

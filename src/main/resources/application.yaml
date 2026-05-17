@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:
@@ -25,4 +25,4 @@ server:
 
 jwt:
   secret: ${JWT_SECRET:bXktc3VwZXItc2VjcmV0LWtleS1mb3ItYXRtLW1vbml0b3JpbmctYXBwLTEyMzQ1Njc4OTAxMjM0NTY=}
-  expiration: ${JWT_EXPIRATION:600000}
+  expiration: ${JWT_EXPIRATION:6000}

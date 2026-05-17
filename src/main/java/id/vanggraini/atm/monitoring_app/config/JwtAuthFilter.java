@@ -12,6 +12,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import id.vanggraini.atm.monitoring_app.service.JwtService;
 import id.vanggraini.atm.monitoring_app.service.impl.UserDetailsServiceImpl;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,10 +57,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     log.warn("Invalid JWT token for user: {} on request: {} {}", username, request.getMethod(), request.getRequestURI());
                 }
             }
-        } catch (UsernameNotFoundException e) {
-            log.warn("JWT token references unknown user — {}", e.getMessage());
-        } catch (Exception e) {
-            log.warn("JWT token validation failed on request: {} {} — {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.warn("Expired JWT on request: {} {}", request.getMethod(), request.getRequestURI());
+            request.setAttribute("jwt_exception", e);
+        } catch (JwtException | UsernameNotFoundException e) {
+            log.warn("JWT validation failed on request: {} {} — {}", request.getMethod(), request.getRequestURI(), e.getMessage());
+            request.setAttribute("jwt_exception", e);
         }
 
         filterChain.doFilter(request, response);

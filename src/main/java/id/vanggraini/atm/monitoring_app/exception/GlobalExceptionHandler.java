@@ -1,17 +1,20 @@
 package id.vanggraini.atm.monitoring_app.exception;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import tools.jackson.databind.exc.InvalidFormatException;
 
 import id.vanggraini.atm.monitoring_app.dto.ErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -51,5 +54,33 @@ public class GlobalExceptionHandler {
             HttpStatus.BAD_REQUEST.value(), message, LocalDateTime.now());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidArgument(MethodArgumentNotValidException ex) {
+
+        String errors = ex.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(fieldError -> fieldError.getDefaultMessage())
+            .collect(Collectors.joining(" and "));
+
+        ErrorResponse response = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "Validation failed: " + errors, 
+            LocalDateTime.now());
+        
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtExpired(ExpiredJwtException ex) {
+        ErrorResponse response = new ErrorResponse(
+            HttpStatus.UNAUTHORIZED.value(),
+            "Token expired, please login again", 
+            LocalDateTime.now()    
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }
