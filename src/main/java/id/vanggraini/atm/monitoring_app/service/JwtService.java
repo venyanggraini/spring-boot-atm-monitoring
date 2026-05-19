@@ -1,62 +1,62 @@
 package id.vanggraini.atm.monitoring_app.service;
 
 import java.util.Date;
-import java.util.function.Function;
 
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import id.vanggraini.atm.monitoring_app.config.Jwt;
+import id.vanggraini.atm.monitoring_app.config.JwtConfig;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@AllArgsConstructor
+@Slf4j
 public class JwtService {
-    
-    @Value("${jwt.secret}")
-    private String jwtSecret;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    private final JwtConfig jwtConfig;
 
-    private SecretKey getSignKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    public Jwt generateAccessToken(UserDetails userDetails) {
+        return generateToken(userDetails, jwtConfig.getAccessTokenExpiration());
     }
 
-    private Claims extractAllClaims(String token) {
+    public Jwt generateRefreshToken(UserDetails userDetails) {
+        return generateToken(userDetails, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    private Claims getClaims(String token) {
         return Jwts.parser()
-            .verifyWith(getSignKey())
+            .verifyWith(jwtConfig.getSecretKey())
             .build()
             .parseSignedClaims(token)
             .getPayload();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
-        return claimResolver.apply(extractAllClaims(token));
+    public Jwt parseToken(String token) {
+        try {
+            var claims = getClaims(token);
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        } catch (ExpiredJwtException e) {
+            log.warn("Expired JWT token");
+            throw e;
+        } catch (JwtException e) {
+            log.warn("Unauthorized");
+            return null;
+        }
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
+    private Jwt generateToken(UserDetails userDetails, Long tokenExpiration) {
+        var claims = Jwts.claims()
             .subject(userDetails.getUsername())
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-            .signWith(getSignKey())
-            .compact();
-    }
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public boolean isTokenExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+            .expiration(new Date(System.currentTimeMillis() + tokenExpiration))
+            .build();
+        
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 }

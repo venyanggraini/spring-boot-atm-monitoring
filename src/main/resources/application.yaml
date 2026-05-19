@@ -25,4 +25,5 @@ server:
 
 jwt:
   secret: ${JWT_SECRET:bXktc3VwZXItc2VjcmV0LWtleS1mb3ItYXRtLW1vbml0b3JpbmctYXBwLTEyMzQ1Njc4OTAxMjM0NTY=}
-  expiration: ${JWT_EXPIRATION:6000}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:5000}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:10000}
